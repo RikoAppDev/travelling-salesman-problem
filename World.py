@@ -40,8 +40,21 @@ class World:
 
         return w_places
 
-    def calculate_distance(self, place1, place2):
+    @staticmethod
+    def calculate_distance(place1, place2):
         dx = place2.get("lat") - place1.get("lat")
         dy = place2.get("long") - place1.get("long")
 
         return math.sqrt(dx * dx + dy * dy)
+
+    def get_permutation_value(self, permutation):
+        value = 0
+
+        amount = len(permutation)
+
+        for i in range(amount - 1):
+            value += self.calculate_distance(permutation[i], permutation[i + 1])
+
+        value += self.calculate_distance(permutation[amount - 1], permutation[0])
+
+        return value

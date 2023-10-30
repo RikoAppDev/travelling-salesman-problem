@@ -18,22 +18,33 @@ def show_place(place, w_map, c):
                       outline="black", fill="red")
     w_map.create_text(place.get("lat") + PLACE_DIAMETER / 2, place.get("long") + PLACE_DIAMETER / 2, text=c,
                       fill="black",
-                      font=('"Comic Sans MS" 10 normal'))
+                      font='"Comic Sans MS" 10 normal')
 
 
-def tabu_search():
+def show_best_trip(permutation, w_map):
+    count = len(permutation)
+
+    for j in range(count - 1):
+        connect_places(permutation[j], permutation[j + 1], w_map)
+
+    connect_places(permutation[count - 1], permutation[0], w_map)
+
+
+def tabu_search(world_places):
     # TODO
-    pass
+    final_permutation = world_places
+    return final_permutation
 
 
-def simulated_annealing():
+def simulated_annealing(world_places):
     # TODO
-    pass
+    final_permutation = world_places
+    return final_permutation
 
 
 if __name__ == "__main__":
     amount = input("Amount of places 🏙️ >> ")
-    while int(amount) < 5 or int(amount) > 240:
+    while int(amount) < 2 or int(amount) > 240:
         print(f"‼️ Error ‼️\n\t- Minimal number of places is 5 and maximal is 240")
         amount = input("Amount of places 🏙️ >> ")
 
@@ -71,10 +82,16 @@ if __name__ == "__main__":
             )
         )
 
+    best_permutation = []
+    value = world.get_permutation_value(places)
     if algo == 1:
-        tabu_search()
+        best_permutation = tabu_search(places)
     elif algo == 2:
-        simulated_annealing()
+        best_permutation = simulated_annealing(places)
+
+    print(f"\nOptimal trip length: {value:.2f}km 📏")
+    root.title(f"Travelling Salesman Problem 🚶‍♂️- Optimal trip length: {value:.2f}km 📏")
+    show_best_trip(best_permutation, world_map)
 
     print("\nℹ️ INFO: RESULT IS DISPLAYED IN WINDOW\n\t- Travelling Salesman Problem 🚶‍♂️")
     mainloop()
