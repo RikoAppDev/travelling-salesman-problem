@@ -31,20 +31,24 @@ def show_best_trip(permutation, w_map):
 
 
 def tabu_search(world_places):
-    # TODO
-    final_permutation = world_places
+    # TODO: Tabu Search
+    from Tabu_Search import TabuSearch
+
+    tabu_search_algo = TabuSearch(world_places, 50)
+    final_permutation = tabu_search_algo.final_permutation
+
     return final_permutation
 
 
 def simulated_annealing(world_places):
-    # TODO
+    # TODO: Simulated Annealing
     final_permutation = world_places
     return final_permutation
 
 
 if __name__ == "__main__":
     amount = input("Amount of places 🏙️ >> ")
-    while int(amount) < 2 or int(amount) > 240:
+    while int(amount) < 5 or int(amount) > 240:
         print(f"‼️ Error ‼️\n\t- Minimal number of places is 5 and maximal is 240")
         amount = input("Amount of places 🏙️ >> ")
 
@@ -55,6 +59,7 @@ if __name__ == "__main__":
     print("\r🌍 World has been successfully created with " + amount + " places 🏙️\n")
 
     root = Tk()
+    root.attributes('-topmost', True)
     root.resizable(False, False)
     root.title("Travelling Salesman Problem 🚶‍♂️")
 

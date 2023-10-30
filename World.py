@@ -12,8 +12,8 @@ class World:
     @staticmethod
     def check_place_collision(x, y, actual_places: list):
         for a_place in actual_places:
-            if (a_place.get("lat") - PLACE_DIAMETER - 5 < x < a_place.get("lat") + PLACE_DIAMETER + 5 and
-                    a_place.get("long") - PLACE_DIAMETER - 5 < y < a_place.get("long") + PLACE_DIAMETER + 5):
+            if (a_place.get("lat") - PLACE_DIAMETER - GAP < x < a_place.get("lat") + PLACE_DIAMETER + GAP and
+                    a_place.get("long") - PLACE_DIAMETER - GAP < y < a_place.get("long") + PLACE_DIAMETER + GAP):
                 return True
 
         return False
@@ -27,8 +27,8 @@ class World:
             print(f"\rGenerating world: loading {((total - count) * 100 / total) - 0.1:.02f} %", end="")
 
             w_place: dict = {}
-            x = random.randint(5, WINDOW_WIDTH - (PLACE_DIAMETER + 5))
-            y = random.randint(5, WINDOW_HEIGHT - (PLACE_DIAMETER + 5))
+            x = random.randint(GAP, WINDOW_WIDTH - (PLACE_DIAMETER + GAP))
+            y = random.randint(GAP, WINDOW_HEIGHT - (PLACE_DIAMETER + GAP))
 
             if self.check_place_collision(x, y, w_places):
                 count += 1
@@ -49,7 +49,6 @@ class World:
 
     def get_permutation_value(self, permutation):
         value = 0
-
         amount = len(permutation)
 
         for i in range(amount - 1):
