@@ -9,12 +9,14 @@ class TabuSearch:
     nearest_neighbour_value: float
     max_iterations: int
     max_tabu_list_size: int
+    max_none_improve: int
 
-    def __init__(self, world, max_iterations, max_tabu_list_size=50):
+    def __init__(self, world, max_iterations, max_tabu_list_size=50, max_none_improve=100):
         self.world = world
         self.nearest_neighbour_value = world.get_permutation_value(world.nearest_neighbour_permutation)
         self.max_iterations = max_iterations
         self.max_tabu_list_size = max_tabu_list_size
+        self.max_none_improve = max_none_improve
         self.final_permutation = self.algo(world.places)
 
     def algo(self, permutation):
@@ -23,6 +25,7 @@ class TabuSearch:
         best = permutation
         best_candidate = permutation
         tabu_list = [permutation]
+        none_improve = 0
 
         i = 0
         while not i == self.max_iterations:
@@ -34,6 +37,9 @@ class TabuSearch:
 
             if self.fitness(best_candidate) > self.fitness(best):
                 best = best_candidate
+                none_improve = 0
+            else:
+                none_improve += 1
 
             tabu_list.append(best_candidate)
             if len(tabu_list) > self.max_tabu_list_size:
@@ -41,6 +47,9 @@ class TabuSearch:
 
             i += 1
             print(f"\rIteration: {i} ♻️\tTrip length: {self.world.get_permutation_value(best):.2f}km 📏", end="")
+
+            if none_improve >= self.max_none_improve:
+                break
 
         return best
 
