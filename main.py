@@ -30,11 +30,10 @@ def show_best_trip(permutation, w_map):
     connect_places(permutation[count - 1], permutation[0], w_map)
 
 
-def tabu_search(world_places):
-    # TODO: Tabu Search
-    from Tabu_Search import TabuSearch
+def tabu_search(w, max_iter):
+    from TabuSearch import TabuSearch
 
-    tabu_search_algo = TabuSearch(world_places, 50)
+    tabu_search_algo = TabuSearch(w, max_iter, 50)
     final_permutation = tabu_search_algo.final_permutation
 
     return final_permutation
@@ -48,18 +47,18 @@ def simulated_annealing(world_places):
 
 if __name__ == "__main__":
     amount = input("Amount of places 🏙️ >> ")
-    while int(amount) < 5 or int(amount) > 240:
-        print(f"‼️ Error ‼️\n\t- Minimal number of places is 5 and maximal is 240")
+    while int(amount) < 3 or int(amount) > 240:
+        print(f"‼️ Error ‼️\n\t- Minimal number of places is 3 and maximal is 240")
         amount = input("Amount of places 🏙️ >> ")
 
     world = World(amount)
     places = world.places
-    print(f"\rGenerating world: loading 100% ✅", end="")
     sleep(.3)
     print("\r🌍 World has been successfully created with " + amount + " places 🏙️\n")
 
     root = Tk()
     root.attributes('-topmost', True)
+    root.geometry('%dx%d+%d+%d' % (WINDOW_WIDTH, WINDOW_HEIGHT, root.winfo_screenwidth() - WINDOW_WIDTH - 10, 0))
     root.resizable(False, False)
     root.title("Travelling Salesman Problem 🚶‍♂️")
 
@@ -71,14 +70,11 @@ if __name__ == "__main__":
         show_place(p, world_map, i)
         i += 1
 
-    # print(f"distance between {places[0]} and {places[1]} is: {world.calculate_distance(places[0], places[1]):.2f}km")
-    # connect_places(places[0], places[1], world_map)
-
     algo = int(
         input(
-            "Choose algorithm for the Travelling Salesman Problem 🚶‍♂️\nTabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> ")
+            "Choose algorithm for Travelling Salesman Problem 🚶‍♂️\nTabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
+        )
     )
-
     while algo != 1 and algo != 2:
         print("‼️ Error ‼️\n\t- Choose between 1️⃣ or 2️⃣")
         algo = int(
@@ -87,14 +83,21 @@ if __name__ == "__main__":
             )
         )
 
+    iterations = int(input("Number of iterations ♻️ (optimal 500) >> "))
+    while iterations < 1:
+        print("‼️ Error ‼️\n\t- Input positive not null number")
+        iterations = int(input("Number of iterations ♻️ (optimal 500) >> "))
+    print()
+
     best_permutation = []
-    value = world.get_permutation_value(places)
     if algo == 1:
-        best_permutation = tabu_search(places)
+        best_permutation = tabu_search(world, iterations)
     elif algo == 2:
         best_permutation = simulated_annealing(places)
 
-    print(f"\nOptimal trip length: {value:.2f}km 📏")
+    value = world.get_permutation_value(best_permutation)
+
+    print(f"\n\nOptimal trip length: {value:.2f}km 📏")
     root.title(f"Travelling Salesman Problem 🚶‍♂️- Optimal trip length: {value:.2f}km 📏")
     show_best_trip(best_permutation, world_map)
 
