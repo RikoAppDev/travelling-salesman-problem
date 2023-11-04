@@ -30,18 +30,21 @@ def show_best_trip(permutation, w_map):
     connect_places(permutation[count - 1], permutation[0], w_map)
 
 
-def tabu_search(w, max_iter):
+def tabu_search(w):
     from TabuSearch import TabuSearch
 
-    tabu_search_algo = TabuSearch(w, max_iter, 50)
+    tabu_search_algo = TabuSearch(w)
     final_permutation = tabu_search_algo.final_permutation
 
     return final_permutation
 
 
-def simulated_annealing(world_places):
-    # TODO: Simulated Annealing
-    final_permutation = world_places
+def simulated_annealing(w):
+    from SimulatedAnnealing import SimulatedAnnealing
+
+    simulated_annealing_algo = SimulatedAnnealing(w)
+    final_permutation = simulated_annealing_algo.final_permutation
+
     return final_permutation
 
 
@@ -82,18 +85,13 @@ if __name__ == "__main__":
                 "️Tabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
             )
         )
-
-    iterations = int(input("Number of iterations ♻️ (optimal 500) >> "))
-    while iterations < 1:
-        print("‼️ Error ‼️\n\t- Input positive not null number")
-        iterations = int(input("Number of iterations ♻️ (optimal 500) >> "))
     print()
 
     best_permutation = []
     if algo == 1:
-        best_permutation = tabu_search(world, iterations)
+        best_permutation = tabu_search(world)
     elif algo == 2:
-        best_permutation = simulated_annealing(places)
+        best_permutation = simulated_annealing(world)
 
     value = world.get_permutation_value(best_permutation)
 

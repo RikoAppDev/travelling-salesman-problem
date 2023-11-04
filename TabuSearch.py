@@ -7,16 +7,13 @@ class TabuSearch:
     world: World
     final_permutation: list
     nearest_neighbour_value: float
-    max_iterations: int
-    max_tabu_list_size: int
-    max_none_improve: int
+    max_iterations = 1000
+    max_tabu_list_size = 50
+    max_none_improve = 100
 
-    def __init__(self, world, max_iterations, max_tabu_list_size=50, max_none_improve=100):
+    def __init__(self, world):
         self.world = world
         self.nearest_neighbour_value = world.get_permutation_value(world.nearest_neighbour_permutation)
-        self.max_iterations = max_iterations
-        self.max_tabu_list_size = max_tabu_list_size
-        self.max_none_improve = max_none_improve
         self.final_permutation = self.algo(world.places)
 
     def algo(self, permutation):
