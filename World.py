@@ -8,8 +8,8 @@ class World:
     distance_matrix: list[list]
     nearest_neighbour_permutation: list
 
-    def __init__(self, amount):
-        self.places = self.generate_places(int(amount))
+    def __init__(self, amount, seed):
+        self.places = self.generate_places(int(amount), seed)
         self.distance_matrix = self.fill_distance_matrix()
         self.nearest_neighbour_permutation = self.get_nearest_neighbour()
 
@@ -22,7 +22,8 @@ class World:
 
         return False
 
-    def generate_places(self, count: int):
+    def generate_places(self, count: int, seed: int):
+        random.seed(seed)
         w_places = []
         total = count
 

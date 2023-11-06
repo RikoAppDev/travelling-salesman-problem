@@ -1,5 +1,6 @@
 from time import sleep
 from tkinter import *
+from timeit import default_timer as timer
 
 from World import World
 from constants import *
@@ -48,13 +49,29 @@ def simulated_annealing(w):
     return final_permutation
 
 
+def print_info():
+    value = world.get_permutation_value(best_permutation)
+
+    print(f"\n\nOptimal trip length: {value:.2f}km 📏")
+    root.title(f"Travelling Salesman Problem 🚶‍♂️- Optimal trip length: {value:.2f}km 📏")
+    print(f"Execution time: {format((end - start) * 1000, '.2f')} ms ⏱️")
+    show_best_trip(best_permutation, world_map)
+
+    if algo != 0:
+        print("\nℹ️ INFO: RESULT IS DISPLAYED IN WINDOW\n\t- Travelling Salesman Problem 🚶‍♂️")
+        mainloop()
+    print()
+
+
 if __name__ == "__main__":
     amount = input("Amount of places 🏙️ >> ")
     while int(amount) < 3 or int(amount) > 240:
         print(f"‼️ Error ‼️\n\t- Minimal number of places is 3 and maximal is 240")
         amount = input("Amount of places 🏙️ >> ")
 
-    world = World(amount)
+    seed = input("Input world seed 🫘 >> ")
+
+    world = World(amount, seed)
     places = world.places
     sleep(.3)
     print("\r🌍 World has been successfully created with " + amount + " places 🏙️\n")
@@ -75,29 +92,31 @@ if __name__ == "__main__":
 
     algo = int(
         input(
-            "Choose algorithm for Travelling Salesman Problem 🚶‍♂️\nTabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
+            "Choose algorithm for Travelling Salesman Problem 🚶‍♂️\nBoth -> 0️⃣ | Tabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
         )
     )
-    while algo != 1 and algo != 2:
-        print("‼️ Error ‼️\n\t- Choose between 1️⃣ or 2️⃣")
+    while algo != 0 and algo != 1 and algo != 2:
+        print("‼️ Error ‼️\n\t- Choose between 0️⃣, 1️⃣ or 2️⃣")
         algo = int(
             input(
-                "️Tabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
+                "️Both -> 0️⃣ | Tabu Search -> 1️⃣ | Simulated Annealing -> 2️⃣ >> "
             )
         )
     print()
 
     best_permutation = []
-    if algo == 1:
+
+    if algo == 1 or algo == 0:
+        if algo == 0:
+            print("1️⃣ Tabu Search")
+        start = timer()
         best_permutation = tabu_search(world)
-    elif algo == 2:
+        end = timer()
+        print_info()
+    if algo == 2 or algo == 0:
+        if algo == 0:
+            print("\n2️⃣ Simulated Annealing")
+        start = timer()
         best_permutation = simulated_annealing(world)
-
-    value = world.get_permutation_value(best_permutation)
-
-    print(f"\n\nOptimal trip length: {value:.2f}km 📏")
-    root.title(f"Travelling Salesman Problem 🚶‍♂️- Optimal trip length: {value:.2f}km 📏")
-    show_best_trip(best_permutation, world_map)
-
-    print("\nℹ️ INFO: RESULT IS DISPLAYED IN WINDOW\n\t- Travelling Salesman Problem 🚶‍♂️")
-    mainloop()
+        end = timer()
+        print_info()
